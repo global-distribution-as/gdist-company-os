@@ -178,16 +178,21 @@
   },
   "active": "69795b3900f104aa",
   "lastOpenFiles": [
+    "GlobalDistribution/05-Planning/Roadmap.md",
+    "GlobalDistribution/04-Tech/Architecture.md",
+    "GlobalDistribution/03-Admin/Admin Overview.md",
+    "GlobalDistribution/02-Buyers/Buyers Overview.md",
+    "GlobalDistribution/01-Suppliers/Suppliers Overview.md",
+    "GlobalDistribution/Home.md",
+    "GlobalDistribution/05-Planning",
+    "GlobalDistribution/04-Tech",
+    "GlobalDistribution/03-Admin",
+    "GlobalDistribution/02-Buyers",
+    "GlobalDistribution/01-Suppliers",
+    "GlobalDistribution",
     "09_Legal/IP",
     "09_Legal/Compliance",
     "09_Legal/Contracts",
-    "08_HR/Performance",
-    "08_HR/Roles",
-    "08_HR/Onboarding",
-    "07_Tech/Integrations",
-    "07_Tech/Infrastructure",
-    "07_Tech/Platform",
-    "06_Finance/Invoices",
-    "06_Finance/Reports"
+    "08_HR/Performance"
   ]
 }
