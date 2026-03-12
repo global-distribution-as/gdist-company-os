@@ -178,6 +178,17 @@
   },
   "active": "69795b3900f104aa",
   "lastOpenFiles": [
+    "05-Planning/Roadmap.md",
+    "05-Planning",
+    "04-Tech/Architecture.md",
+    "04-Tech",
+    "03-Admin/Admin Overview.md",
+    "03-Admin",
+    "02-Buyers/Buyers Overview.md",
+    "02-Buyers",
+    "01-Suppliers/Suppliers Overview.md",
+    "01-Suppliers",
+    "Home.md",
     "SYNC-SETUP.md",
     "sync.sh",
     "GlobalDistribution/05-Planning/Roadmap.md",
@@ -189,11 +200,6 @@
     "GlobalDistribution/05-Planning",
     "GlobalDistribution/04-Tech",
     "GlobalDistribution/03-Admin",
-    "GlobalDistribution/02-Buyers",
-    "GlobalDistribution/01-Suppliers",
-    "GlobalDistribution",
-    "09_Legal/IP",
-    "09_Legal/Compliance",
-    "09_Legal/Contracts"
+    "GlobalDistribution/02-Buyers"
   ]
 }
