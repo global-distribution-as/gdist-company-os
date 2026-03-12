@@ -1,4 +1,4 @@
-# Roadmap
+# Web Platform Roadmap
 
 ## Now — Foundation
 
@@ -9,23 +9,32 @@
 - [ ] Real backend API
 - [ ] Database integration
 
-## Next — Supplier Domain
+## Supplier Domain
 
 - [ ] Supplier onboarding flow
 - [ ] Live product management
 - [ ] CSV upload to database
 - [ ] Order fulfillment workflow
 
-## Next — Buyer Domain
+## Buyer Domain
 
 - [ ] Buyer onboarding flow
 - [ ] Live product catalogue
 - [ ] Quote request → order flow
 - [ ] Order tracking
 
+## Admin
+
+- [ ] Pricing engine with margins
+- [ ] Inventory management
+- [ ] Supplier / buyer account management
+
 ## Later
 
-- [ ] Pricing engine with margins (Admin)
-- [ ] Inventory management (Admin)
 - [ ] Notifications
-- [ ] Multi-language support (EN/NO/CN already scaffolded)
+- [ ] Multi-language (EN/NO/CN scaffolded)
+
+## Related
+
+- [[06_Projects/web-platform/changelog]]
+- [[07_Tech/Platform/Architecture]]

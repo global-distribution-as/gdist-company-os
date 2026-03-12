@@ -11,10 +11,14 @@
             "id": "ed3a4e7782bf1b72",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Home.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Home"
             }
           }
         ]
@@ -178,6 +182,16 @@
   },
   "active": "69795b3900f104aa",
   "lastOpenFiles": [
+    "06_Projects/_Index.md",
+    "06_Projects/web-platform/Roadmap.md",
+    "07_Tech/Platform/Architecture.md",
+    "05_Products/_Index.md",
+    "01_Customers/_Index.md",
+    "02_Suppliers/_Index.md",
+    "00_Dashboard/Dashboard.md",
+    "Home.md",
+    "SYNC-SETUP.md",
+    "01-Suppliers/Suppliers Overview.md",
     "05-Planning/Roadmap.md",
     "05-Planning",
     "04-Tech/Architecture.md",
@@ -186,10 +200,7 @@
     "03-Admin",
     "02-Buyers/Buyers Overview.md",
     "02-Buyers",
-    "01-Suppliers/Suppliers Overview.md",
     "01-Suppliers",
-    "Home.md",
-    "SYNC-SETUP.md",
     "sync.sh",
     "GlobalDistribution/05-Planning/Roadmap.md",
     "GlobalDistribution/04-Tech/Architecture.md",
