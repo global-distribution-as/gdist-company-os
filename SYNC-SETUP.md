@@ -1,4 +1,12 @@
-# Obsidian Vault Sync Setup
+# SYNC-SETUP
+
+## Daglig bruk
+
+- Etter skriving: kjør `~/Documents/GlobalDistribution/sync.sh`
+- Sjekk at `git status` er clean.
+- Hvis konflikt: noter kort hva du gjorde i [[09_Weekly/Log-YYYY-WW]].
+
+---
 
 Git-based sync via GitHub. No iCloud. Runs automatically every 5 minutes.
 
