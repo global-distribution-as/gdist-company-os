@@ -178,6 +178,8 @@
   },
   "active": "69795b3900f104aa",
   "lastOpenFiles": [
+    "SYNC-SETUP.md",
+    "sync.sh",
     "GlobalDistribution/05-Planning/Roadmap.md",
     "GlobalDistribution/04-Tech/Architecture.md",
     "GlobalDistribution/03-Admin/Admin Overview.md",
@@ -192,7 +194,6 @@
     "GlobalDistribution",
     "09_Legal/IP",
     "09_Legal/Compliance",
-    "09_Legal/Contracts",
-    "08_HR/Performance"
+    "09_Legal/Contracts"
   ]
 }
