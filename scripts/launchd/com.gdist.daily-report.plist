@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.gdist.daily-report.plist
+  Sender daglig statusrapport kl 07:30.
+
+  Installer:
+    cp ~/Documents/GlobalDistribution/scripts/launchd/com.gdist.daily-report.plist \
+       ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.gdist.daily-report.plist
+
+  Logg:
+    tail -f /tmp/gdist-daily-report.log
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.gdist.daily-report</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/gdist/Documents/GlobalDistribution/scripts/daily-report.sh</string>
+    </array>
+
+    <!-- Kl 07:30 hver dag -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>7</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/gdist-daily-report.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/gdist-daily-report.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/gdist</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
