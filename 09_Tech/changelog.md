@@ -5,6 +5,39 @@
 
 ---
 
+## 2026-03-16 — Kostnadsaudit: optimalisering og dokumentasjon
+
+### vercel.json: smartere ignoreCommand (monorepo-bevisst)
+
+**Problem:** Den gamle `ignoreCommand` (`[ "$VERCEL_GIT_COMMIT_REF" != "main" ]`) var redundant
+med `deploymentEnabled: { main: true }` — den sjekket bare om vi var på main, noe som
+`deploymentEnabled` allerede håndterer. Bygget ble alltid trigget ved push til main, uansett
+hva som faktisk ble endret.
+
+**Endring:**
+```
+Gammel: [ "$VERCEL_GIT_COMMIT_REF" != "main" ]
+Ny:     git diff HEAD^ HEAD --quiet -- apps/portal/ packages/
+```
+
+Vercel hopper nå over bygg når bare jessica-appen, vault-scripts eller dokumentasjon
+endres — kun endringer i `apps/portal/` eller `packages/` trigger et nytt bygg.
+
+**Besparelse:** Sparer ~2 min per "stille" push til main. Viktigere ved frekvent vault-sync.
+
+**Fil:** `vercel.json`
+
+### Ny fil: 09_Tech/COSTS.md
+
+Full kostnadslogg opprettet med:
+- Nåværende månedskostnad per tjeneste (~kr 8–9/mnd totalt)
+- Projeksjon ved 10× bruk (~kr 260/mnd, drevet av Supabase storage)
+- De tre største kostnadsrisikoene ved vekst og mitigeringsstrategier
+- Supabase inaktivitetspause-advarsel (kritisk pre-launch)
+- Mac mini vs. sky — hva flyttes lokalt, hva forblir
+
+---
+
 ## 2026-03-16 — Systemaudit: auto-fiks (6 stk)
 
 Gjennomført full systemaudit på tvers av kodebase, infrastruktur og vault.
