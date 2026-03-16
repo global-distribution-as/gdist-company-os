@@ -19,6 +19,26 @@ log() { echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOG_FILE"; }
 
 log "=== Daglig rapport starter: $TODAY ==="
 
+# --- Tell filer i vault ---
+VAULT_ORDER_COUNT=$(find "${VAULT_DIR}/04_Orders" -maxdepth 3 -name "*.md" \
+  ! -name "_*.md" ! -name "README.md" 2>/dev/null | wc -l | tr -d ' ')
+
+VAULT_INQUIRY_COUNT=$(find "${VAULT_DIR}/01_Buyers/Active" -maxdepth 2 -name "*.md" \
+  ! -name "_*.md" ! -name "README.md" 2>/dev/null | wc -l | tr -d ' ')
+
+log "Vault-telling — Ordre: ${VAULT_ORDER_COUNT:-0}, Inquiries: ${VAULT_INQUIRY_COUNT:-0}"
+
+# --- Sjekk forfalne påminnelser fra 10_Log/reminders/ ---
+REMINDERS_DIR="${VAULT_DIR}/10_Log/reminders"
+REMINDERS_TODAY=""
+if [[ -d "$REMINDERS_DIR" ]]; then
+  for f in "$REMINDERS_DIR"/${DATE_ISO}_reminder_*.md(N); do
+    fname="$(basename "$f")"
+    title=$(grep '^# ' "$f" 2>/dev/null | head -1 | sed 's/^# //')
+    REMINDERS_TODAY+="  ⏰  ${title:-$fname}\n"
+  done
+fi
+
 # =============================================================
 # 1. Hent data fra Supabase
 # =============================================================
@@ -110,11 +130,30 @@ else
   OVERDUE_HEADER="Forfalte betalinger"
 fi
 
+REMINDER_SECTION=""
+if [[ -n "$REMINDERS_TODAY" ]]; then
+  REMINDER_SECTION="
+⏰ PÅMINNELSER I DAG
+$(echo -e "$REMINDERS_TODAY")"
+fi
+
 REPORT_TEXT="
 ======================================================
   GLOBAL DISTRIBUTION AS — Daglig rapport
   $TODAY
 ======================================================
+
+  Dato:              $DATE_ISO
+  Aktive ordre:      ${VAULT_ORDER_COUNT:-0}  (vault)
+  Åpne inquiries:    ${VAULT_INQUIRY_COUNT:-0}  (vault)
+  Supabase ordre:    $ORDER_COUNT
+  Supabase inquiries: $INQUIRY_COUNT
+  Forfalte:          $OVERDUE_COUNT
+  Påminnelser:       $(echo -e "$REMINDERS_TODAY" | grep -c '⏰' 2>/dev/null || echo 0)
+  Vault synket:      $(cd "${VAULT_DIR}" && git log -1 --format='%ar' 2>/dev/null || echo 'ukjent')
+  Rapport generert:  $(date '+%H:%M:%S')
+
+------------------------------------------------------
 
 AKTIVE ORDRE ($ORDER_COUNT)
 $ORDERS_TABLE
@@ -124,6 +163,7 @@ $INQUIRY_TABLE
 
 $OVERDUE_HEADER
 $OVERDUE_TABLE
+$REMINDER_SECTION
 
 ------------------------------------------------------
 Vault synket:   $(cd ~/Documents/GlobalDistribution && git log -1 --format='%ar' 2>/dev/null || echo 'ukjent')
@@ -136,14 +176,32 @@ Automatisk rapport fra Mac mini • Global Distribution AS
 log "Rapport bygget"
 
 # =============================================================
-# 3. Send e-post via Resend
+# 3. Lagre rapport til vault
+# =============================================================
+
+DAILY_DIR="${VAULT_DIR}/08_Daily"
+mkdir -p "$DAILY_DIR"
+VAULT_REPORT_FILE="${DAILY_DIR}/${DATE_ISO}_rapport_daglig.md"
+
+{
+  echo "---"
+  echo "tags: [rapport, daglig, auto]"
+  echo "created: $DATE_ISO"
+  echo "---"
+  echo ""
+  echo "$REPORT_TEXT"
+} > "$VAULT_REPORT_FILE"
+
+log "✓ Rapport lagret: $VAULT_REPORT_FILE"
+
+# =============================================================
+# 4. Send e-post via Resend
 # =============================================================
 
 if [ -z "$RESEND_API_KEY" ] || [ "$RESEND_API_KEY" = "FYLL_INN_RESEND_API_KEY" ]; then
   log "⚠️  RESEND_API_KEY ikke satt — skriver rapport til logg i stedet"
   echo "$REPORT_TEXT"
-  echo "$REPORT_TEXT" >> "/tmp/gdist-rapport-$DATE_ISO.txt"
-  log "Rapport skrevet til /tmp/gdist-rapport-$DATE_ISO.txt"
+  log "Rapport lagret i vault: $VAULT_REPORT_FILE"
   exit 0
 fi
 

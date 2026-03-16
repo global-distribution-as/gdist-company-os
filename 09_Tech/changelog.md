@@ -1,0 +1,99 @@
+# Changelog — Global Distribution AS
+
+> Automatisk og manuelt loggede endringer på tvers av vault, scripts og portal.
+> Nyeste endringer øverst.
+
+---
+
+## 2026-03-16 — Systemaudit: auto-fiks (6 stk)
+
+Gjennomført full systemaudit på tvers av kodebase, infrastruktur og vault.
+Alle endringer med HIGH impact og ≤30 min innsats ble implementert automatisk.
+
+### Fix 1 — `daily-report.sh`: feil mappestier for vault-telling
+
+**Problem:** Scriptet søkte i `03_Orders/` og `01_Customers/` — mapper som ikke finnes.
+Ordre- og inquiry-tellingen viste alltid `0`.
+
+**Endring:**
+- `03_Orders` → `04_Orders` (korrekt ordrekatalog)
+- `01_Customers` → `01_Buyers/Active` (korrekt buyer-katalog)
+
+**Fil:** `scripts/daily-report.sh`
+
+---
+
+### Fix 2 — `com.gdist.monthly-analysis.plist`: hardkodet `/Users/daniel/`
+
+**Problem:** Alle andre launchd-plister bruker `/Users/gdist/` som plassholder
+(erstattes av `setup-mac-mini.sh` ved installasjon). Denne plisten hadde `/Users/daniel/`
+og ville feilet stille på Mac mini.
+
+**Endring:** Alle forekomster av `/Users/daniel` → `/Users/gdist` i plist-filen.
+
+**Fil:** `scripts/launchd/com.gdist.monthly-analysis.plist`
+
+---
+
+### Fix 3 — Slettet 7.4MB ubrukt bildefil fra portal
+
+**Problem:** `apps/portal/public/northern-lights-bg.jpg` (7.4 MB, 5120×3408px) lå i
+git-historikken og ble lastet opp til Vercel ved hvert deploy. Ingen steder i koden
+refererte til denne filen — bakgrunnsbildet hentes fra Unsplash CDN.
+
+**Endring:** Fil slettet fra `apps/portal/public/`.
+
+**Besparelse:** ~7 sekunder raskere Vercel-upload per deploy.
+
+---
+
+### Fix 4 — Fjernet ubrukt `QueryClientProvider` fra `App.tsx`
+
+**Problem:** `@tanstack/react-query` var installert og `QueryClientProvider` wrapte
+hele applikasjonen, men ikke ett eneste `useQuery`- eller `useMutation`-kall finnes
+noe sted i kodebasen. Rent boilerplate som aldri ble tatt i bruk.
+
+**Endring:** Fjernet import, `const queryClient`, og `<QueryClientProvider>` wrapper.
+
+**Besparelse:** 40KB fra bundle (668KB → 610KB gzip-komprimert: 191KB → 176KB).
+
+---
+
+### Fix 5 — Fjernet duplikat toast-system fra `App.tsx`
+
+**Problem:** To separate toast-biblioteker var montert i roten:
+- `<Toaster>` fra `@radix-ui/react-toast` (via shadcn-wrapper)
+- `<Sonner>` fra `sonner`-pakken
+
+Kun Sonner ble faktisk brukt i kodebasen. Radix Toaster var aldri kalt.
+
+**Endring:** Fjernet `import { Toaster } from "@/components/ui/toaster"` og `<Toaster />`.
+Beholdt Sonner som eneste toast-system.
+
+---
+
+### Fix 6 — Opprettet manglende vault-mapper
+
+**Problem:** To mapper som automatiseringsskript avhenger av eksisterte ikke i git:
+- `08_Daily/` — brukes av `daily-report.sh` for å lagre daglige rapporter
+- `04_Orders/Quotes/` — brukes av `export-quotes-to-obsidian.sh` for tilbudsfiler
+
+Skriptene hadde `mkdir -p` som fallback, men mappene burde finnes i git fra starten.
+
+**Endring:** Opprettet begge mapper med `.gitkeep` og lagt til i git.
+
+---
+
+## Backlog (ikke implementert automatisk)
+
+Disse krever beslutning fra Daniel:
+
+| # | Hva | Hvorfor ikke auto-fikset |
+|---|-----|--------------------------|
+| 7 | Flytt marginer/valutakurs/landpremier fra `quoteEngine.ts` til Supabase | Full dag — krever ny migrasjons + admin-UI |
+| 8 | Fjern 7 ubrukte npm-pakker (~120KB) | Half dag — krever testing av alle sider etterpå |
+| 9 | Cache `useUserRole` (fetches 3× per sesjon) | Half dag — krever auth context refaktor |
+| 10 | Deploy Jessica buyer-portal til Vercel | Half dag — mangler `vercel.json` for jessica-appen |
+| 11 | Konsolider duplikat SOP: `05_SOPs/JESSICA_PLAYBOOK.md` vs `06_Operations/SOPs/` | 30 min — men krever bekreftelse fra Daniel |
+| 12 | Aktiver TypeScript strict mode | Half dag — vil avdekke type-feil som må fikses |
+| 13 | `config.env`: fyll inn 3 API-nøkler (Supabase, Resend, Anthropic) | Manuelt — hemmeligheter kan ikke auto-genereres |

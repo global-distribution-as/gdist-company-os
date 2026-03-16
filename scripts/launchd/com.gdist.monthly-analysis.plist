@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.gdist.monthly-analysis.plist
+  Kjører vinn/tap-analyse mot Claude API den 1. i hver måned kl. 08:15.
+  (15 min etter daglig rapport for å unngå overlapp)
+
+  Installer:
+    cp ~/Documents/GlobalDistribution/scripts/launchd/com.gdist.monthly-analysis.plist \
+       ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.gdist.monthly-analysis.plist
+
+  Verifiser:
+    launchctl list | grep gdist.monthly-analysis
+
+  Kjør manuelt (forrige måned):
+    zsh ~/Documents/GlobalDistribution/scripts/monthly-analysis.sh
+
+  Kjør manuelt (spesifikk måned):
+    ANALYSE_MONTH_OVERRIDE=2026-03 zsh ~/Documents/GlobalDistribution/scripts/monthly-analysis.sh
+
+  Logg:
+    tail -f /tmp/gdist-monthly-analysis.log
+
+  OBS — Mac mini:
+    Bytt /Users/gdist → /Users/gdist i ProgramArguments og HOME nedenfor
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.gdist.monthly-analysis</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/gdist/Documents/GlobalDistribution/scripts/monthly-analysis.sh</string>
+    </array>
+
+    <!-- Kjør 1. i hver måned kl. 08:15 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Day</key>
+        <integer>1</integer>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>15</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/gdist-monthly-analysis.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/gdist-monthly-analysis.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/gdist</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
