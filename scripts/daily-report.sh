@@ -14,10 +14,60 @@ source "$SCRIPT_DIR/config.env"
 LOG_FILE="/tmp/gdist-daily-report.log"
 TODAY=$(date '+%A %d. %B %Y')
 DATE_ISO=$(date '+%Y-%m-%d')
+TECH_DIR="${VAULT_DIR}/09_Tech"
+ERROR_LOG="${TECH_DIR}/error-log.md"
+HEARTBEAT_FILE="/tmp/gdist-daily-report.heartbeat"
 
 log() { echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOG_FILE"; }
 
+log_error() {
+  local CODE="$1" LINE="$2"
+  local TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+  mkdir -p "$TECH_DIR"
+  if [[ ! -f "$ERROR_LOG" ]] || ! grep -q "^| Tidspunkt" "$ERROR_LOG" 2>/dev/null; then
+    printf "# Error Log — Global Distribution AS\n\n| Tidspunkt | Script | Linje | Detalj |\n|-----------|--------|-------|--------|\n" > "$ERROR_LOG"
+  fi
+  echo "| ${TIMESTAMP} | daily-report.sh | Linje ${LINE} | Exit code: ${CODE} |" >> "$ERROR_LOG"
+}
+
+trap 'log_error "$?" "$LINENO"' ERR
+
 log "=== Daglig rapport starter: $TODAY ==="
+
+# --- Kjør quote-expiration via Supabase RPC ---
+# expire_stale_quotes() oppdaterer quotes med valid_until < today og status=sent → expired
+EXPIRED_QUOTES=$(curl -sf \
+  "${SUPABASE_URL}/rest/v1/rpc/expire_stale_quotes" \
+  -X POST \
+  -H "apikey: $SUPABASE_SERVICE_ROLE" \
+  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE" \
+  -H "Content-Type: application/json" \
+  -d '{}' 2>/dev/null || echo "0")
+log "Quote-expiration: $EXPIRED_QUOTES tilbud utløpt"
+
+# --- Sjekk heartbeat for andre scripts ---
+check_heartbeat() {
+  local NAME="$1"
+  local FILE="/tmp/gdist-${NAME}.heartbeat"
+  local MAX_HOURS="$2"
+  if [[ ! -f "$FILE" ]]; then
+    echo "⚠️  ${NAME}: aldri kjørt"
+    return
+  fi
+  local LAST_RUN=$(cat "$FILE")
+  local AGE_SECONDS=$(( $(date '+%s') - $(date -jf '%Y-%m-%d %H:%M:%S' "$LAST_RUN" '+%s' 2>/dev/null || echo 0) ))
+  local MAX_SECONDS=$(( MAX_HOURS * 3600 ))
+  if (( AGE_SECONDS > MAX_SECONDS )); then
+    echo "⚠️  ${NAME}: sist kjørt $LAST_RUN ($(( AGE_SECONDS / 3600 ))t siden)"
+  else
+    echo "✅ ${NAME}: kjørte $LAST_RUN"
+  fi
+}
+
+HEARTBEAT_STATUS=""
+HEARTBEAT_STATUS+="  $(check_heartbeat 'vault-sync' 25)\n"
+HEARTBEAT_STATUS+="  $(check_heartbeat 'weekly-analysis' 168)\n"
+HEARTBEAT_STATUS+="  $(check_heartbeat 'monthly-analysis' 720)\n"
 
 # --- Tell filer i vault ---
 VAULT_ORDER_COUNT=$(find "${VAULT_DIR}/04_Orders" -maxdepth 3 -name "*.md" \
@@ -65,7 +115,13 @@ OVERDUE_JSON=$(curl -sf "$BASE/orders?select=order_number,payment_status,balance
 
 OVERDUE_COUNT=$(echo "$OVERDUE_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
 
-log "Data hentet — Ordre: $ORDER_COUNT, Inquiries: $INQUIRY_COUNT, Forfalte: $OVERDUE_COUNT"
+# Produkter venter på godkjenning (status = pending)
+PENDING_PRODUCTS_JSON=$(curl -sf "$BASE/products?select=name,supplier_id&status=eq.pending&order=created_at.asc" \
+  -H "$AUTH_HEADER" -H "$APIKEY_HEADER" -H "Content-Type: application/json" 2>/dev/null || echo "[]")
+
+PENDING_PRODUCT_COUNT=$(echo "$PENDING_PRODUCTS_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
+
+log "Data hentet — Ordre: $ORDER_COUNT, Inquiries: $INQUIRY_COUNT, Forfalte: $OVERDUE_COUNT, Produkter til godkjenning: $PENDING_PRODUCT_COUNT"
 
 # =============================================================
 # 2. Bygg rapport
@@ -119,9 +175,22 @@ else:
 PYEOF
 }
 
+build_pending_products_table() {
+  echo "$PENDING_PRODUCTS_JSON" | python3 - <<'PYEOF'
+import json, sys
+items = json.load(sys.stdin)
+if not items:
+    print("  (ingen produkter venter)")
+else:
+    for p in items:
+        print(f"  • {p.get('name','?')}")
+PYEOF
+}
+
 ORDERS_TABLE=$(build_orders_table)
 INQUIRY_TABLE=$(build_inquiry_table)
 OVERDUE_TABLE=$(build_overdue_table)
+PENDING_PRODUCTS_TABLE=$(build_pending_products_table)
 
 # Overdue-header med varsel
 if [ "$OVERDUE_COUNT" != "0" ] && [ "$OVERDUE_COUNT" != "?" ]; then
@@ -149,10 +218,16 @@ REPORT_TEXT="
   Supabase ordre:    $ORDER_COUNT
   Supabase inquiries: $INQUIRY_COUNT
   Forfalte:          $OVERDUE_COUNT
+  Til godkjenning:   $PENDING_PRODUCT_COUNT produkter
+  Utløpt i dag:      $EXPIRED_QUOTES tilbud
   Påminnelser:       $(echo -e "$REMINDERS_TODAY" | grep -c '⏰' 2>/dev/null || echo 0)
   Vault synket:      $(cd "${VAULT_DIR}" && git log -1 --format='%ar' 2>/dev/null || echo 'ukjent')
   Rapport generert:  $(date '+%H:%M:%S')
 
+------------------------------------------------------
+
+AUTOMATISERINGSSTATUS
+$(echo -e "$HEARTBEAT_STATUS")
 ------------------------------------------------------
 
 AKTIVE ORDRE ($ORDER_COUNT)
@@ -163,12 +238,15 @@ $INQUIRY_TABLE
 
 $OVERDUE_HEADER
 $OVERDUE_TABLE
+
+PRODUKTER TIL GODKJENNING ($PENDING_PRODUCT_COUNT)
+$PENDING_PRODUCTS_TABLE
 $REMINDER_SECTION
 
 ------------------------------------------------------
 Vault synket:   $(cd ~/Documents/GlobalDistribution && git log -1 --format='%ar' 2>/dev/null || echo 'ukjent')
-Portal URL:     https://web-platform-kappa-three.vercel.app
-Inquiry URL:    https://web-platform-kappa-three.vercel.app/inquiry
+Portal URL:     https://gdist.no/admin/dashboard
+Inquiry URL:    https://gdist.no/inquiry
 ------------------------------------------------------
 Automatisk rapport fra Mac mini • Global Distribution AS
 "
@@ -222,5 +300,8 @@ send_email() {
 
 send_email "$EMAIL_DANIEL" && log "✓ E-post sendt til Daniel"
 send_email "$EMAIL_MARTIN" && log "✓ E-post sendt til Martin"
+
+# Skriv heartbeat
+echo "$(date '+%Y-%m-%d %H:%M:%S')" > "$HEARTBEAT_FILE"
 
 log "=== Rapport ferdig ==="

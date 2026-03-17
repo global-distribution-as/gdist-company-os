@@ -1,84 +1,90 @@
-# Jessica — Your Playbook
+# Jessica Playbook — Global Distribution AS
 
-_Everything you need to manage buyer relationships and inquiries._
-
----
-
-## Your Daily Routine (20 min — do this first)
-
-1. **Check the inquiry form** — go to the admin dashboard or Supabase to see new submissions
-2. **Respond to new inquiries** within 24 hours — use the template below
-3. **Follow up** on anything sent 3+ days ago with no reply
-4. **Update inquiry notes** in `01_Buyers/` — log every contact point
-5. **Flag to Martin** if an inquiry is ready to become a real order
+How to handle the three most common situations. Keep it simple and consistent.
 
 ---
 
-## When a New Inquiry Arrives
+## 1. New Inquiry Comes In
 
-Buyers submit via: **web-platform-kappa-three.vercel.app/inquiry**
+**Response time target: within 24 hours.**
 
-Fields you'll see: Name, Company, Contact (email/WeChat), Product, Quantity, Message.
+**Step 1 — Log it**
+Create a new file from `_TEMPLATE_inquiry.md` in `00_INBOX/`. Fill in who it's from, what they want, and when it arrived.
 
-**Step 1 — Qualify (5 min)**
+**Step 2 — Qualify it**
+Before replying, answer these three questions to yourself:
+- Do we carry this product (or can we source it)?
+- Is the order size realistic for us (minimum ~$500 USD)?
+- Does the buyer seem serious (business email, specific quantities, clear use case)?
 
-Ask yourself three questions before responding:
+If all three are yes, move forward. If not, reply politely that we can't help this time.
 
-| Question | Yes → | No → |
-|----------|-------|-------|
-| Can we supply this product? | Continue | Politely decline, suggest alternatives |
-| Is the quantity worth it? (>100 units) | Continue | Ask if volume could grow |
-| Is this a real buyer or a price-shopper? | Continue | Still reply, but don't invest too much time |
+**Step 3 — Send the first reply**
+Keep it short. Confirm you received their inquiry, tell them you'll have a quote within 48 hours, and ask for anything missing (exact quantities, delivery country, deadline).
 
-**Step 2 — Respond (15 min)**
-
-Reply template:
-> *"Hi [Name], thank you for reaching out to Global Distribution AS. We specialize in [relevant category] from European suppliers and regularly work with buyers across Asia. We'd love to explore this with you. Could you share a bit more about [missing info]? I'll come back with availability and indicative pricing within 48 hours. Best regards, Jessica"*
-
-Always ask for:
-- Delivery address / destination country
-- Target price range (if they haven't shared it)
-- Timeline for first delivery
-
-**Step 3 — Hand Off to Martin**
-
-When a buyer is serious (real company, real volume, realistic timeline):
-1. Create a buyer note in `01_Buyers/Active/Firmanavn.md`
-2. Create an inquiry note in `04_Orders/` and flag status as "Qualified"
-3. Tell Martin — he'll check supplier availability and pricing
+Template opening:
+> "Hi [Name], thank you for reaching out to Global Distribution AS. We're reviewing your inquiry and will send a quote within 48 hours. Could you also confirm [missing info]?"
 
 ---
 
-## Following Up
+## 2. Sending a Quote
 
-- No reply after 3 days → send a one-line nudge: *"Just checking in — still interested?"*
-- No reply after 7 days → mark as "Cold" in the buyer note, stop following up
-- Buyer says not now → mark as "Future" and set a note to revisit in 60 days
+**Response time target: within 48 hours of the inquiry.**
+
+**Step 1 — Get the numbers**
+Check with Martin or Daniel for current supplier price and available stock before quoting. Never guess on price.
+
+**Step 2 — Build the quote**
+Use the quote generator on the platform (gdist.no/admin/quotes/new) or use the `Ordre-mal.md` template.
+
+Include:
+- Product name and description
+- Unit price in USD
+- Quantity
+- Estimated shipping cost (if known)
+- Payment terms
+- Quote validity (standard: 14 days)
+
+**Step 3 — Send it**
+Send by email (or WeChat if that's how the buyer communicates). Log the sent date in the inquiry file.
+
+**Step 4 — Set a follow-up reminder**
+If no response after 48 hours, follow up once. Note the follow-up date in the inquiry file.
 
 ---
 
-## WeChat Tips
+## 3. Following Up After No Response
 
-Many Asian buyers prefer WeChat over email. If they give you a WeChat ID:
-- Add them from your company account
-- Keep it professional — always respond in English unless they message in another language
-- Never share personal pricing in group chats — only in private messages
+**If a quote has had no reply for 48 hours:**
 
----
+Send one follow-up. Keep it brief and friendly — no pressure.
 
-## When to Contact Daniel
+> "Hi [Name], just following up on the quote I sent on [date]. Happy to adjust quantities or answer any questions. Let me know if you'd like to move forward."
 
-- A buyer wants to place an order above USD 20,000
-- A buyer asks for exclusivity in their market
-- Payment terms differ from standard (we typically require 30–50% upfront)
-- A buyer complains about a delivery or quality issue
-- You're unsure about anything commercial
+**If still no response after 5 business days:**
+Mark the inquiry as "No response" in the file and move on. Do not follow up a third time.
+
+**If the buyer says they need more time:**
+Note the date they mentioned and follow up on that specific date. Update the inquiry file.
 
 ---
 
-## Key Rules
+## Response Time Targets — Summary
 
-1. **Never promise a price or delivery date** — always say "indicative" until Martin confirms
-2. **Log every conversation** in the buyer's Obsidian note
-3. **English only** in all external communication (unless the buyer writes Norwegian)
-4. **Reply speed wins deals** — a fast "we're looking into it" beats a slow perfect answer
+| Situation | Target |
+|-----------|--------|
+| New inquiry received | Reply within **24 hours** |
+| Quote requested | Send quote within **48 hours** |
+| Quote sent, no reply | Follow up after **48 hours** |
+| No response to follow-up | Close after **5 business days** |
+| Buyer confirms order | Confirm back same day |
+
+---
+
+## When to Escalate to Martin or Daniel
+
+Bring it to them (don't handle alone) if:
+- The order is over $5,000 USD
+- The buyer wants custom terms or a contract
+- There's a complaint about a delivered order
+- You're unsure about the product, supplier, or pricing

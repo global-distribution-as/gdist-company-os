@@ -1,0 +1,4 @@
+Dato,Ordre-ID,Type,Kategori,Motpart,Beloep_NOK,Valuta_Orig,Beloep_Orig,Betalt,Notat
+2026-03-16,ORD-001,Inntekt,Salg,Eksempel Buyer AS,85000,EUR,7500,J,Første ordre - pilotleveranse
+2026-03-16,ORD-001,Utgift,Varekjøp,Eksempel Supplier Ltd,-62000,EUR,-5500,J,Innkjøp til ORD-001
+2026-03-16,ORD-001,Utgift,Frakt,DHL,-3200,NOK,-3200,J,Frakt til buyer

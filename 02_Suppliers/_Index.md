@@ -22,6 +22,6 @@ Route: `/supplier/*` · Accent: Blue
 
 ## Related
 
-- [[05_Products/_Index|Products]]
-- [[03_Processes/Operations/|Operations Processes]]
-- [[06_Projects/web-platform/Roadmap|Roadmap]]
+- [[03_Products/_Index|Products]]
+- [[06_Operations/SOPs/Operations/|Operations Processes]]
+- [[08_Projects/web-platform/Roadmap|Roadmap]]

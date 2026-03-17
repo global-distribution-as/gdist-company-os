@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.gdist.weekly-analysis.plist
+  Kjører ukentlig mønsteranalyse mandag morgen kl. 08:45.
+  Leser de 4 siste ukentlige reviews og lar Claude finne mønstre.
+
+  Installer:
+    cp ~/Documents/GlobalDistribution/scripts/launchd/com.gdist.weekly-analysis.plist \
+       ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.gdist.weekly-analysis.plist
+
+  Verifiser:
+    launchctl list | grep gdist.weekly-analysis
+
+  Kjør manuelt:
+    zsh ~/Documents/GlobalDistribution/scripts/weekly-analysis.sh
+
+  Logg:
+    tail -f /tmp/gdist-weekly-analysis.log
+
+  OBS — Mac mini:
+    Bytt /Users/gdist → /Users/gdist i ProgramArguments og HOME nedenfor
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.gdist.weekly-analysis</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/gdist/Documents/GlobalDistribution/scripts/weekly-analysis.sh</string>
+    </array>
+
+    <!-- Kl 08:45 hver mandag (weekday 1) -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>1</integer>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>45</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/gdist-weekly-analysis.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/gdist-weekly-analysis.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/gdist</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>

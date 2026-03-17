@@ -26,7 +26,7 @@ _Prøv løsningen selv først. Fungerer ingenting → ring Daniel._
 **Sjekk 1:** Er de registrert med riktig e-postadresse? (Martin sjekker i Supabase)
 **Sjekk 2:** Be dem bruke "Glemt passord" på innloggingssiden.
 **Sjekk 3:** Hvis ingenting fungerer → Daniel fikser brukerkontoen (5 min).
-Portal-URL: **web-platform-kappa-three.vercel.app**
+Portal-URL: **gdist.no**
 
 ---
 

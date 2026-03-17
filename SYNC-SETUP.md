@@ -4,7 +4,7 @@
 
 - Etter skriving: kjør `~/Documents/GlobalDistribution/sync.sh`
 - Sjekk at `git status` er clean.
-- Hvis konflikt: noter kort hva du gjorde i [[09_Weekly/Log-YYYY-WW]].
+- Hvis konflikt: noter kort hva du gjorde i [[10_Log/Log-YYYY-WW]].
 
 ---
 

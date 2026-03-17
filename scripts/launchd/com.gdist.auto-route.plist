@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.gdist.auto-route.plist
+  Sorterer filer fra 00_INBOX/ til riktig vault-mappe hvert 5. minutt.
+
+  Installer (kjør én gang):
+    cp ~/Documents/GlobalDistribution/scripts/launchd/com.gdist.auto-route.plist \
+       ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.gdist.auto-route.plist
+
+  Verifiser at den kjører:
+    launchctl list | grep gdist.auto-route
+
+  Se logg:
+    tail -f /tmp/gdist-auto-route.log
+
+  Stopp midlertidig:
+    launchctl unload ~/Library/LaunchAgents/com.gdist.auto-route.plist
+
+  OBS — Mac mini:
+    Bytt HOME og script-stien under fra /Users/daniel til /Users/gdist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.gdist.auto-route</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/daniel/Documents/GlobalDistribution/scripts/auto-route.sh</string>
+    </array>
+
+    <!-- Kjør hvert 5. minutt (300 sekunder) -->
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <!-- Kjør umiddelbart ved lasting -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/gdist-auto-route.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/gdist-auto-route.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/daniel</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>

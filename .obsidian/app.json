@@ -1,1 +1,7 @@
-{}
+{
+  "defaultViewMode": "preview",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "_Templates",
+  "promptDelete": true,
+  "trashOption": "local"
+}

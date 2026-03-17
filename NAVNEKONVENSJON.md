@@ -34,6 +34,9 @@ Ikke for systemfiler (se «Unntak» nederst).
 | `sop` | Standard arbeidsprosedyre | `2026-03-16_sop_behandle-ny-inquiry.md` |
 | `beslutning` | Viktig beslutning logget | `2026-03-10_beslutning_eksklusivitet-korea-marked.md` |
 | `rapport` | Rapport eller analyse | `2026-03-01_rapport_pl-februar-2026.md` |
+| `vinntak` | Vinn/tap-analyse etter deal | `2026-03-20_vinntak_tapt_beijing-retail-softshell.md` |
+| `tilbud` | Generert tilbudsdokument | `2026-03-16_tilbud_QUO-2026-001-sportscohk.md` |
+| `intake` | Ny leverandør-onboarding (trigger automatisk pipeline) | `2026-03-16_intake_hansen-textiles.md` |
 
 ---
 

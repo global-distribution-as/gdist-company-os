@@ -15,7 +15,7 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 GRAY='\033[0;90m'; BOLD='\033[1m'; NC='\033[0m'
 
 # --- Gyldige typer ---
-VALID_TYPES="ordre|inquiry|supplier|buyer|kontrakt|faktura|sop|beslutning|rapport"
+VALID_TYPES="ordre|inquiry|supplier|buyer|kontrakt|faktura|sop|beslutning|rapport|vinntak|tilbud|intake"
 
 # --- Korrekt mønster ---
 # 2026-03-16_type_beskrivelse-med-bindestreker.md
@@ -56,6 +56,7 @@ EXEMPT_PATTERNS=(
   "/\.obsidian/"                   # obsidian-konfig
   "/PHILOSOPHY\.md$"               # selskapets verdidokument
   "/00_START_HER\.md$"             # onboarding-startpunkt (duplikat av VELKOMMEN)
+  "/routing-log\.md$"              # auto-generert av auto-route.sh
 )
 
 is_exempt() {

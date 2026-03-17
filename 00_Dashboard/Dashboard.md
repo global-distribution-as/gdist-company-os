@@ -1,32 +1,79 @@
-# Global Distribution AS
+# Global Distribution — Daglig oversikt
 
-B2B distribution portal — European sporting goods suppliers to Asian buyers.
+> Oppdater dette dashboardet hver morgen. Tar 5 minutter.
+> **I dag:** 2026-03-16
 
-## Domains
+---
 
-- [[02_Suppliers/_Index|Suppliers]] — European sporting goods suppliers
-- [[01_Customers/_Index|Buyers / Customers]] — Asian buyers
+## AKTIVE ORDRE
 
-## Operations
+| Ordre | Leverandør | Kjøper | Status | Betalingsstatus | Neste handling | Dato |
+|-------|-----------|--------|--------|-----------------|----------------|------|
+| [[04_Orders/_Index\|ORD-2026-001]] | | | Bekreftet | Depositum betalt | Sjekk frakt | 2026-03-20 |
 
-| Area | Folder |
-|------|--------|
-| Customers / Buyers | [[01_Customers/_Index]] |
-| Suppliers | [[02_Suppliers/_Index]] |
-| Products | [[05_Products/_Index]] |
-| Projects | [[06_Projects/_Index]] |
-| Finance | [[06_Finance/_Index]] |
-| Tech | [[07_Tech/_Index]] |
-| HR | [[08_HR/_Index]] |
-| Legal | [[09_Legal/_Index]] |
+_→ Klikk ordrenummeret for detaljer. Ny ordre: kopier [[_Templates/Ordre-mal]]._
 
-## This Week
+---
 
-- [[09_Weekly/]]
-- [[08_Daily/]]
+## ÅPNE INQUIRIES
 
-## Web Platform
+| Inquiry | Firma | Produkt | Dager gammel | Status | Neste steg |
+|---------|-------|---------|-------------|--------|------------|
+| [[01_Buyers/_Index\|INQ-2026-001]] | | | | Ny | Send tilbud |
 
-- [[06_Projects/web-platform/Roadmap]]
-- [[06_Projects/web-platform/changelog]]
-- [[07_Tech/Platform/Architecture]]
+_→ Ny inquiry: kopier [[_Templates/Inquiry-mal]]._
+
+---
+
+## NESTE STEG I DAG
+
+- [ ] **Ordre:**
+- [ ] **Inquiry:**
+- [ ] **Leverandør:**
+- [ ] **Annet:**
+
+---
+
+## BETALINGER — DENNE UKEN
+
+| Hva | Beløp | Forfaller | Betalt? |
+|-----|-------|-----------|---------|
+|     | NOK   | 2026-     | Nei     |
+
+---
+
+## LEVERANSER PÅ VEI
+
+| Ordre | Fra | Til | Est. ankomst | Status |
+|-------|-----|-----|-------------|--------|
+|       |     |     |             |        |
+
+---
+
+## LEVERANDØRER — AKTIVE
+
+| Leverandør | Kontakt | Åpne ordre | Siste kontakt |
+|------------|---------|-----------|---------------|
+| [[02_Suppliers/Active/]] | | | |
+
+_→ Ny leverandør: kopier [[_Templates/Leverandor-mal]]._
+
+---
+
+## DENNE UKEN — LOGG
+
+**Mandag:**
+**Tirsdag:**
+**Onsdag:**
+**Torsdag:**
+**Fredag:**
+
+---
+
+## HURTIGLENKER
+
+| | |
+|---|---|
+| [[04_Orders/_Index\|Alle ordre]] | [[01_Buyers/_Index\|Alle inquiries]] |
+| [[02_Suppliers/_Index\|Leverandører]] | [[03_Products/Catalogue\|Produktkatalog]] |
+| [[05_Finance/Tasks\|Finans]] | [[06_Operations/SOPs/\|Prosesser / SOPs]] |

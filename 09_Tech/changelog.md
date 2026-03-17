@@ -5,6 +5,78 @@
 
 ---
 
+## 2026-03-17 — Automatiseringsarkitektur: scripts, cron, konfig
+
+### Nye scripts opprettet
+
+**`scripts/keepalive-supabase.sh`**
+Pinger Supabase settings-tabell daglig (kl 08:00). Logger OK/ADVARSEL til `08_Daily/keepalive.log`.
+Sender e-post via Resend ved feil (forutsetter at Resend-nøkkel er konfigurert).
+Trimmer logg til siste 90 linjer automatisk.
+
+**`scripts/update-fx-rates.sh`**
+Henter NOK/USD og NOK/CNY fra frankfurter.app (ECB, gratis, ingen nøkkel).
+PATCHer Supabase settings-tabell hverdager kl 09:00. Logger til `08_Daily/fx-rates.log`.
+Beholder eksisterende kurs ved API-feil — feiler aldri hardt.
+
+**`aurora-trade-hub/scripts/pre-deploy-check.sh`**
+Kjøres manuelt før `supabase db push` eller `vercel --prod`.
+Sjekker: Docker-status, supabase db diff, RLS-aktivering på kritiske tabeller,
+TypeScript-build, hardkodede hemmeligheter i kildekode, bundle-størrelse.
+Blokkerer deploy ved feil, advarer ved potensielle problemer.
+
+**`aurora-trade-hub/scripts/dev-status.sh`**
+Ukentlig teknisk statusrapport: git-status, build-status, TypeScript-feil,
+migrasjonshistorikk, utdaterte npm-pakker, keepalive-logg, FX-logg, bundle-størrelse.
+Kan pipes til `pbcopy` for liming inn i Claude.
+
+### crontab.conf oppdatert
+
+Lagt til to nye cron-jobber:
+- `0 8 * * *` — keepalive-supabase.sh (daglig kl 08:00)
+- `0 9 * * 1-5` — update-fx-rates.sh (hverdager kl 09:00)
+
+**HANDLING KREVES:** Aktiver crontab på Mac mini:
+```bash
+crontab ~/Documents/GlobalDistribution/scripts/crontab.conf
+```
+
+### config/margins.yaml opprettet (aurora-trade-hub)
+
+Marginregler per produktkategori (20–25 %), godkjenningsgrenser for Martin og Jessica,
+tilleggsprosenter for express og skreddersydde kontrakter.
+Skal leses av quoteEngine.ts etter wiring (peker til Supabase for valutakurser).
+
+---
+
+## 2026-03-17 — Forretningsstrukturaudit: SOPer, playbooks, helse-dashboard
+
+### Fase 3: Kritiske og høye funn implementert
+
+**SOPer opprettet (06_Operations/SOPs/):**
+- `2026-03-17_sop_keepalive-supabase.md` — KRITISK: Forhindrer automatisk DB-pause på Free tier. Steg-for-steg guide for daglig cron-oppsett.
+- `2026-03-17_sop_quote-followup-ownership.md` — Tydeliggjør eierskap: den som sender tilbudet, eier oppfølgingen. Prosedyre for overføring ved fravær.
+- `2026-03-17_sop_jessica-coverage.md` — Dekning for buyer-kommunikasjon når Jessica er utilgjengelig. Varslingsprotokoll og standardmelding.
+- `2026-03-17_sop_monthly-pl-review.md` — Månedlig P&L-prosedyre: hvem gjør hva, maler, terskler.
+- `2026-03-17_sop_config-env.md` — Steg-for-steg guide for å fylle ut config.env og låse opp Mac mini automatisering.
+
+**ADR opprettet (09_Tech/ADR/):**
+- `2026-03-17_fx-rate-api.md` — Frankfurter.app (ECB-data, gratis, ingen API-nøkkel) for daglig NOK/USD og NOK/CNY oppdatering via cron til Supabase settings-tabell.
+
+**Playbooks oppdatert:**
+- `MARTIN_PLAYBOOK.md` — La til: keepalive-sjekk i morgenrutinen, tilbudssjekk i ukentlig rutine, månedlig P&L-prosedyre, og eksplisitt liste over oppgaver som krever Daniel.
+
+### Fase 4: Business Health Dashboard
+
+- `00_Dashboard/BUSINESS_HEALTH.md` opprettet — 5 ukentlige nøkkeltall, 3 advarselssignaler med tiltaksplan, månedlig sjekkliste, kvartalsvis strategispørsmål, teknisk helsestatus.
+
+### Fase 5: Stresstester og filosofidokument
+
+- `09_Philosophy/STRESS_TESTS.md` — Tre scenarioer analysert med sviktpunkter og preventive tiltak: Daniel utilgjengelig 2 uker, Jessica slutter, 10× inquiries.
+- `09_Philosophy/BUSINESS_STRUCTURE_BRIEF.md` — Én-sides brief: hva selskapet er, hvem gjør hva, hva er sant (ukensert), de 5 viktigste oppgavene neste 30 dager, og hva suksess ser ut som.
+
+---
+
 ## 2026-03-16 — Kostnadsaudit: optimalisering og dokumentasjon
 
 ### vercel.json: smartere ignoreCommand (monorepo-bevisst)
