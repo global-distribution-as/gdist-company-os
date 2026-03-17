@@ -46,3 +46,28 @@
 
 ### Ollama test
 - qwen2.5:32b tested with Norwegian prompt — responded correctly
+
+---
+
+## 2026-03-17 — Remote Access Setup
+
+### Tailscale
+- Installed and authenticated as g-dist@
+- Mac mini Tailscale IP: 100.75.168.54
+- MacBook Pro Tailscale IP: 100.111.160.10
+
+### SSH
+- Remote Login enabled
+- SSH key (id_ed25519_gdist) added to authorized_keys
+- SSH config: `ssh gdist-mini` connects via Tailscale
+- Tested locally (localhost) and remotely (100.75.168.54)
+
+### SSH Config
+- `github.com` → g-dist (org key)
+- `gdist-mini` → 100.75.168.54 via Tailscale
+
+### Hostname
+- Pending sudo: `sudo scutil --set HostName/LocalHostName/ComputerName gdist-mini`
+
+### Documentation
+- Created 06_Tech/REMOTE_ACCESS.md with connection guide, service checks, and troubleshooting
