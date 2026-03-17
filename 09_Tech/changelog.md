@@ -5,6 +5,14 @@
 
 ---
 
+## 2026-03-17 — GitHub-push: vault synkronisert
+
+- 118 filer committet og pushet til `global-distribution-as/gdist-company-os` (main)
+- `.gitignore` oppdatert: la til `.obsidian/cache`
+- Inkluderer: dashboard, playbooks, SOPs, finance, templates, scripts, ADRs, philosophy
+
+---
+
 ## 2026-03-17 — Automatiseringsarkitektur: scripts, cron, konfig
 
 ### Nye scripts opprettet
